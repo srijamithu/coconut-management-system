@@ -1,0 +1,199 @@
+<div class="suppliers-page">
+    <div class="page-header">
+        <div>
+            <h1>Suppliers Management</h1>
+            <p>Manage all your coconut suppliers here.</p>
+        </div>
+
+        <button class="add-button" (click)="openForm()">+ Add Supplier</button>
+    </div>
+
+    @if (showForm) {
+        <div class="form-overlay" (click)="closeForm()">
+            <form
+                class="supplier-form"
+                novalidate
+                (ngSubmit)="saveSupplier()"
+                (click)="$event.stopPropagation()"
+            >
+                <div class="form-header">
+                    <div>
+                        <h2>{{ editingSupplierId ? 'Edit Supplier' : 'Add New Supplier' }}</h2>
+                        <p>Enter the supplier details below.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="close-button"
+                        aria-label="Close form"
+                        (click)="closeForm()"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="supplierName">Supplier Name</label>
+                        <input
+                            id="supplierName"
+                            name="supplierName"
+                            type="text"
+                            placeholder="Enter supplier name"
+                            required
+                            [(ngModel)]="newSupplier.name"
+                        />
+                        @if (formErrors.name) {
+                            <p class="error-message">{{ formErrors.name }}</p>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supplierMobile">Mobile Number</label>
+                        <input
+                            id="supplierMobile"
+                            name="supplierMobile"
+                            type="tel"
+                            inputmode="numeric"
+                            maxlength="10"
+                            placeholder="Enter mobile number"
+                            required
+                            pattern="[0-9]{10}"
+                            [(ngModel)]="newSupplier.mobile"
+                        />
+                        @if (formErrors.mobile) {
+                            <p class="error-message">{{ formErrors.mobile }}</p>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supplierVillage">Village</label>
+                        <input
+                            id="supplierVillage"
+                            name="supplierVillage"
+                            type="text"
+                            placeholder="Enter village"
+                            required
+                            [(ngModel)]="newSupplier.village"
+                        />
+                        @if (formErrors.village) {
+                            <p class="error-message">{{ formErrors.village }}</p>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supplierStatus">Status</label>
+                        <select
+                            id="supplierStatus"
+                            name="supplierStatus"
+                            [(ngModel)]="newSupplier.status"
+                        >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        (click)="closeForm()"
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="add-button">
+                        Save Supplier
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <div class="search-container">
+        <input
+            id="supplierSearch"
+            name="supplierSearch"
+            class="search-input"
+            type="search"
+            placeholder="Search by name, mobile number or village..."
+            aria-label="Search suppliers"
+            [(ngModel)]="searchText"
+            (ngModelChange)="currentPage = 1"
+        />
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Supplier ID</th>
+                    <th>Supplier Name</th>
+                    <th>Mobile</th>
+                    <th>Village</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- @for (supplier of filteredSuppliers; track supplier.id) { -->
+                    @for(supplier of paginatedSuppliers; track supplier.id) {
+                    <tr>
+                        <td>{{ supplier.id }}</td>
+                        <td>{{ supplier.name }}</td>
+                        <td>{{ supplier.mobile }}</td>
+                        <td>{{ supplier.village }}</td>
+                        <td>
+                            <span
+                                [class.status]="supplier.status === 'Active'"
+                                [class.inactive-status]="supplier.status === 'Inactive'"
+                            >
+                                {{ supplier.status }}
+                            </span>
+                        </td>
+                        <td class="action-buttons">
+                            <button type="button" (click)="editSupplier(supplier)">
+                                Edit
+                            </button>
+
+                            <button
+                            type="button"
+                            class="delete-button"
+                            (click)="deleteSupplier(supplier)"
+                            >
+                        Delete
+                    </button>
+                        </td>
+                    </tr>
+                }
+
+                @if (filteredSuppliers.length === 0) {
+                    <tr class="no-results-row">
+                        <td colspan="6">No suppliers found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button
+        type="button"
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        >
+    Prevoius
+</button>
+<span>
+    Page {{ currentPage }} of {{ totalPages }}
+</span>
+<button
+type="button"
+(click)="changePage(currentPage + 1)"
+[disabled]="currentPage === totalPages || totalPages === 0"
+>
+Next
+</button>
+    </div>
+</div>

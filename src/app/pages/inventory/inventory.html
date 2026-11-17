@@ -1,0 +1,47 @@
+<div class="inventory-page">
+    <div class="page-header">
+        <div>
+            <h1>Inventory Management</h1>
+            <p>Manage and monitor your coconut stock.</p>
+        </div>
+
+        <button class="add-button">
+            + Add Stock
+        </button>
+    </div>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Stock ID</th>
+                <th>Coconut Type</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Purchase Price</th>
+                <th>Selling Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (stock of stocks; track stock.id) {
+                <tr>
+                    <td>{{ stock.id }}</td>
+                    <td>{{ stock.coconutType }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.unit }}</td>
+                    <td>{{ stock.purchasePrice }}</td>
+                    <td>{{ stock.sellingPrice }}</td>
+                    <td>{{ stock.status }}</td>
+                    <td>
+                        <button type="button">Edit</button>
+                        <button type="button">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
