@@ -29,31 +29,65 @@
         🌴 Farmers
       </a>
 
-      <div class="menu-item"> Suppliers</div>
       <a
-      routerLink="/Suppliers"
+        routerLink="/suppliers"
+        routerLinkActive="active"
+        class="menu-item"
+      >
+        🚚 Suppliers
+      </a>
+
+      <a
+        routerLink="/customers"
+        routerLinkActive="active"
+        class="menu-item"
+      >
+        👥 Customers
+      </a>
+
+      <a
+        routerLink="/inventory"
+        routerLinkActive="active"
+        class="menu-item"
+      >
+        📦 Inventory
+      </a>
+
+      <!-- <div class="menu-item">🛒 Purchases</div> -->
+      <a 
+      routerLink="/purchases"
       routerLinkActive="active"
       class="menu-item"
       >
-       🚚 Suppliers
+      🛒 Purchases
     </a>
-
-    <a
-      routerLink="/customers"
+      <!-- <div class="menu-item">💰 Sales</div> -->
+      <a 
+      routerLink="/sales"
       routerLinkActive="active"
       class="menu-item"
-    >
-      👥 Customers
+      >
+      💰 Sales
     </a>
-      <div class="menu-item">📦 Inventory</div>
-      <div class="menu-item">🛒 Purchases</div>
-      <div class="menu-item">💰 Sales</div>
-      <div class="menu-item">💳 Payments</div>
-      <div class="menu-item">📈 Reports</div>
+      <!-- <div class="menu-item">💳 Payments</div> -->
+
+      <a 
+      routerLink="/payments"
+      routerLinkActive="active"
+      class="menu-item"
+      >
+      💳 Payments
+    </a>
+      <!-- <div class="menu-item">📈 Reports</div> -->
+      <a 
+      routerLink="/reports"
+      routerLinkActive="active"
+      class="menu-item"
+      >
+      📈 Reports
+    </a>
       <div class="menu-item">⚙️ Settings</div>
     </nav>
-
-    <a routerLink="/inventory">Inventory</a>
     <div class="sidebar-footer">
       <span>👤</span>
       <div>

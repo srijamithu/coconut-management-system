@@ -4,7 +4,10 @@ import { Farmers } from './pages/farmers/farmers';
 import { Suppliers } from './pages/suppliers/suppliers';
 import { Customers } from './pages/customers/customers';
 import { Inventory } from './pages/inventory/inventory';
-
+import { Purchases } from './pages/purchases/purchases';
+import { Sales } from './pages/sales/sales';
+import { Payments } from './pages/payments/payments';
+import { Reports } from './pages/reports/reports';
 
 export const routes: Routes = [
   {
@@ -36,6 +39,26 @@ export const routes: Routes = [
     path: 'inventory',
     component: Inventory,
     title: 'Inventory | Coconut Management System'
+  },
+  {
+    path: 'purchases',
+    component: Purchases,
+    title: 'Purchases | Coconut Management System'
+  },
+  {
+    path: 'sales',
+    component: Sales,
+    title: 'Sales | Coconut Management System'
+  },
+  {
+    path: 'payments',
+    component: Payments,
+    title: 'Payments | Coconut Management System'
+  },
+  {
+    path: 'reports',
+    component: Reports,
+    title: 'Reports | Coconut Management System'
   },
   {
     path: '**',

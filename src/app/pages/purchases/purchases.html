@@ -1,0 +1,250 @@
+<div class="purchases-page">
+  <div class="page-header">
+    <div>
+      <h1>Purchases Management</h1>
+      <p>Manage coconut purchases from your suppliers.</p>
+    </div>
+
+    <button class="add-button" type="button" (click)="openForm()">
+      + Add Purchase
+    </button>
+  </div>
+
+  @if (showForm) {
+    <div class="form-overlay" (click)="closeForm()">
+      <form
+        class="purchase-form"
+        novalidate
+        (ngSubmit)="savePurchase()"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="form-header">
+          <div>
+            <h2>{{ editingPurchaseId ? 'Edit Purchase' : 'Add New Purchase' }}</h2>
+            <p>
+              {{
+                editingPurchaseId
+                  ? 'Update the purchase details below.'
+                  : 'Enter the purchase details below.'
+              }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            aria-label="Close form"
+            (click)="closeForm()"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="supplierName">Supplier Name</label>
+            <input
+              id="supplierName"
+              type="text"
+              name="supplierName"
+              [(ngModel)]="newPurchase.supplierName"
+              placeholder="Enter supplier name"
+            />
+            @if (formErrors.supplierName) {
+              <p class="error-message">{{ formErrors.supplierName }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="coconutType">Coconut Type</label>
+            <select
+              id="coconutType"
+              name="coconutType"
+              [(ngModel)]="newPurchase.coconutType"
+            >
+              <option value="">Select Coconut Type</option>
+              <option value="Mature Coconut">Mature Coconut</option>
+              <option value="Tender Coconut">Tender Coconut</option>
+              <option value="Copra">Copra</option>
+            </select>
+            @if (formErrors.coconutType) {
+              <p class="error-message">{{ formErrors.coconutType }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input
+              id="quantity"
+              type="number"
+              name="quantity"
+              [(ngModel)]="newPurchase.quantity"
+              min="1"
+              placeholder="Enter quantity"
+            />
+            @if (formErrors.quantity) {
+              <p class="error-message">{{ formErrors.quantity }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="unit">Unit</label>
+            <select id="unit" name="unit" [(ngModel)]="newPurchase.unit">
+              <option value="Pieces">Pieces</option>
+              <option value="Bags">Bags</option>
+              <option value="Tons">Tons</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="purchasePrice">Purchase Price (₹)</label>
+            <input
+              id="purchasePrice"
+              type="number"
+              name="purchasePrice"
+              [(ngModel)]="newPurchase.purchasePrice"
+              min="0.01"
+              step="0.01"
+              placeholder="Enter purchase price"
+            />
+            @if (formErrors.purchasePrice) {
+              <p class="error-message">{{ formErrors.purchasePrice }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="purchaseDate">Purchase Date</label>
+            <input
+              id="purchaseDate"
+              type="date"
+              name="purchaseDate"
+              [(ngModel)]="newPurchase.purchaseDate"
+            />
+            @if (formErrors.purchaseDate) {
+              <p class="error-message">{{ formErrors.purchaseDate }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Total Amount (₹)</label>
+            <div class="total-amount">
+              {{ (+newPurchase.quantity || 0) * (+newPurchase.purchasePrice || 0) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="cancel-button" (click)="closeForm()">
+            Cancel
+          </button>
+          <button type="submit" class="add-button">
+            {{ editingPurchaseId ? 'Update Purchase' : 'Save Purchase' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="purchases-table-card">
+    <div class="table-header">
+      <div>
+        <h2>Purchases List</h2>
+        <p>View and manage purchase records.</p>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Search by Purchase ID, supplier, or coconut type..."
+        [(ngModel)]="searchText"
+      />
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Purchase ID</th>
+            <th>Supplier</th>
+            <th>Coconut Type</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Purchase Price (₹)</th>
+            <th>Total Amount (₹)</th>
+            <th>Purchase Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (purchase of pagedPurchases; track purchase.id) {
+            <tr>
+              <td>{{ purchase.id }}</td>
+              <td>{{ purchase.supplierName }}</td>
+              <td>{{ purchase.coconutType }}</td>
+              <td>{{ purchase.quantity }}</td>
+              <td>{{ purchase.unit }}</td>
+              <td>{{ purchase.purchasePrice }}</td>
+              <td>{{ purchase.totalAmount }}</td>
+              <td>{{ purchase.purchaseDate }}</td>
+              <td class="actions-cell">
+                <button
+                  type="button"
+                  class="action-button"
+                  (click)="editPurchase(purchase)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="action-button delete-button"
+                  (click)="deletePurchase(purchase)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+
+          @if (filteredPurchases.length === 0) {
+            <tr>
+              <td colspan="9" class="empty-state">No purchases found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (filteredPurchases.length > 0) {
+      <div class="pagination">
+        <p class="pagination-summary">
+          Showing {{ pageStart }}–{{ pageEnd }} of {{ filteredPurchases.length }} records
+        </p>
+
+        <div class="pagination-controls">
+          <button
+            type="button"
+            class="page-button"
+            [disabled]="isFirstPage"
+            (click)="previousPage()"
+          >
+            ← Previous
+          </button>
+
+          <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+
+          <button
+            type="button"
+            class="page-button"
+            [disabled]="isLastPage"
+            (click)="nextPage()"
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+

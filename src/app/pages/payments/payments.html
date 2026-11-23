@@ -1,0 +1,252 @@
+<div class="payments-page">
+  <div class="page-header">
+    <div>
+      <h1>Payments Management</h1>
+      <p>Manage and track customer payments.</p>
+    </div>
+
+    <button class="add-button" type="button" (click)="openForm()">
+      + Add Payment
+    </button>
+  </div>
+
+  @if (showForm) {
+    <div class="form-overlay" (click)="closeForm()">
+      <form
+        class="payment-form"
+        novalidate
+        (ngSubmit)="savePayment()"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="form-header">
+          <div>
+            <h2>{{ editingPaymentId ? 'Edit Payment' : 'Add New Payment' }}</h2>
+            <p>
+              {{
+                editingPaymentId
+                  ? 'Update the payment details below.'
+                  : 'Enter the payment details below.'
+              }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            aria-label="Close form"
+            (click)="closeForm()"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input
+              id="customerName"
+              name="customerName"
+              type="text"
+              placeholder="Enter customer name"
+              [(ngModel)]="newPayment.customerName"
+            />
+            @if (formErrors.customerName) {
+              <p class="error-message">{{ formErrors.customerName }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="saleId">Sale ID</label>
+            <input
+              id="saleId"
+              name="saleId"
+              type="text"
+              placeholder="Enter sale ID"
+              [(ngModel)]="newPayment.saleId"
+            />
+            @if (formErrors.saleId) {
+              <p class="error-message">{{ formErrors.saleId }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Amount (₹)</label>
+            <input
+              id="amount"
+              name="amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              placeholder="Enter amount"
+              [(ngModel)]="newPayment.amount"
+            />
+            @if (formErrors.amount) {
+              <p class="error-message">{{ formErrors.amount }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="paymentMethod">Payment Method</label>
+            <select
+              id="paymentMethod"
+              name="paymentMethod"
+              [(ngModel)]="newPayment.paymentMethod"
+            >
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+            @if (formErrors.paymentMethod) {
+              <p class="error-message">{{ formErrors.paymentMethod }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="paymentDate">Payment Date</label>
+            <input
+              id="paymentDate"
+              name="paymentDate"
+              type="date"
+              [(ngModel)]="newPayment.paymentDate"
+            />
+            @if (formErrors.paymentDate) {
+              <p class="error-message">{{ formErrors.paymentDate }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" [(ngModel)]="newPayment.status">
+              <option value="Paid">Paid</option>
+              <option value="Partial">Partial</option>
+              <option value="Pending">Pending</option>
+            </select>
+            @if (formErrors.status) {
+              <p class="error-message">{{ formErrors.status }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="cancel-button" (click)="closeForm()">
+            Cancel
+          </button>
+          <button type="submit" class="add-button">
+            {{ editingPaymentId ? 'Update Payment' : 'Save Payment' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="payments-table-card">
+    <div class="table-header">
+      <div>
+        <h2>Payments List</h2>
+        <p>View and manage payment records.</p>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Search by Payment ID, customer, sale ID, method, or status..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Customer Name</th>
+            <th>Sale ID</th>
+            <th>Amount (₹)</th>
+            <th>Payment Method</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (payment of paginatedPayments; track payment.id) {
+            <tr>
+              <td>{{ payment.id }}</td>
+              <td>{{ payment.customerName }}</td>
+              <td>{{ payment.saleId }}</td>
+              <td>{{ payment.amount }}</td>
+              <td>{{ payment.paymentMethod }}</td>
+              <td>{{ payment.paymentDate }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.paid-status]="payment.status === 'Paid'"
+                  [class.partial-status]="payment.status === 'Partial'"
+                  [class.pending-status]="payment.status === 'Pending'"
+                >
+                  {{ payment.status }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button
+                  type="button"
+                  class="action-button"
+                  (click)="editPayment(payment)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="action-button delete-button"
+                  (click)="deletePayment(payment)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+
+          @if (filteredPayments.length === 0) {
+            <tr>
+              <td colspan="8" class="empty-state">No payments found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (filteredPayments.length > 0) {
+      <div class="pagination">
+        <p class="pagination-summary">
+          Showing {{ pageStart }}–{{ pageEnd }} of {{ filteredPayments.length }} records
+        </p>
+
+        <div class="pagination-controls">
+          <button
+            type="button"
+            class="page-button"
+            [disabled]="isFirstPage"
+            (click)="previousPage()"
+          >
+            ← Previous
+          </button>
+
+          <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+
+          <button
+            type="button"
+            class="page-button"
+            [disabled]="isLastPage"
+            (click)="nextPage()"
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

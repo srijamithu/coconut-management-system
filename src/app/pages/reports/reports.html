@@ -1,0 +1,182 @@
+<div class="reports-page">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Reports & Analytics</h1>
+            <p>Track your coconut business performance.</p>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <div class="filter-group">
+            <label>From Date</label>
+            <input type="date" />
+        </div>
+
+        <div class="filter-group">
+            <label>To Date</label>
+            <input type="date" />
+        </div>
+
+        <button class="filter-button">
+            Apply Filter
+        </button>
+    </div>
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="card-icon sales-icon">💰</div>
+            <div>
+                <p>Total Sales</p>
+                <h2>₹{{ formattedTotalSales }}</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+
+            <div class="card-icon transaction-icon">📋</div>
+            <div>
+                <p>Total Transactions</p>
+                <h2>{{ totalTransactions }}</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-icon purchase-icon">🛒</div>
+            <div>
+                <p>Total Purchases</p>
+                <h2>₹{{ formattedTotalPurchases }}</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-icon payment-icon">💳</div>
+            <div>
+                <p>Payments Received</p>
+                <h2>₹{{ formattedTotalPayments }}</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-icon inventory-icon">📦</div>
+            <div>
+                <p>Current Stock</p>
+                <h2>-</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="latest-sales-card">
+
+        <div class="table-header">
+            <div>
+                <h2>Latest Sales Records</h2>
+                <p>View the 5 most recent sales transactions.</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Sale ID</th>
+                        <th>Customer</th>
+                        <th>Coconut Type</th>
+                        <th>Total Amount</th>
+                        <th>Sale Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (sale of latestSales; track sale.id) {
+                        <tr>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.customerName }}</td>
+                            <td>{{ sale.coconutType }}</td>
+                            <td>₹{{ sale.totalAmount }}</td>
+                            <td>{{ sale.saleDate }}</td>
+                        </tr>
+                    }
+
+                    @if (latestSales.length === 0) {
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                No sales records found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="reports-grid">
+
+        <div class="report-card">
+            <h3>Sales Report</h3>
+            <p>View total sales and customer transactions.</p>
+        </div>
+
+        <div class="report-card">
+            <h3>Purchase Report</h3>
+            <p>View coconut purchases and supplier transactions.</p>
+        </div>
+
+        <div class="report-card">
+            <h3>Payment Report</h3>
+            <p>Track paid, partial and pending payments.</p>
+        </div>
+
+        <div class="report-card">
+            <h3>Inventory Report</h3>
+            <p>Monitor available coconut stock.</p>
+        </div>
+    </div>
+
+    <div class="report-card latest-purchases">
+        <h3>Latest 5 Purchases</h3>
+        <p>Recently recorded coconut purchase.</p>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Purchase ID</th>
+                        <th>Supplier</th>
+                        <th>Coconut Type</th>
+                        <th>Quantity</th>
+                        <th>Purchase Price</th>
+                        <th>Total Amount</th>
+                        <th>Purchase Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (purchase of latestPurchases; track purchase.id) {
+                        <tr>
+                            <td>{{ purchase.id }}</td>
+                            <td>{{ purchase.supplierName }}</td>
+                            <td>{{ purchase.coconutType }}</td>
+                            <td>{{ purchase.quantity }} {{ purchase.unit }}</td>
+                            <td>₹{{ purchase.purchasePrice }}</td>
+                            <td>₹{{ purchase.totalAmount }}</td>
+                            <td>{{ purchase.purchaseDate }}</td>
+                        </tr>
+                    }
+
+                    @if (latestPurchases.length === 0) {
+                        <tr>
+                            <td colspan="7">No purchase record found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
